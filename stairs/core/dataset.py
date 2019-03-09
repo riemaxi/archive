@@ -19,11 +19,22 @@ def records(input = sys.stdin, rs = RECORD_SIZE, ok = OK, end = END):
 		if ok(r):
 			yield r
 
-		if end(r):
-			break
-
-		r = nextrecord(input, rs)
+		r = None if end(r) else nextrecord(input, rs)
 
 def pairs(inputa = sys.stdin,inputb=sys.stdin, rs=1):
 	for a,b in  it.product(records(inputa,rs), records(inputb,rs)):
 		yield a,b
+
+def join(inputa = sys.stdin,inputb=sys.stdin, rs=1):
+	def nextpair(aiter, biter):
+		a,b = next(aiter), next(biter)
+		return a,b if a and b else None
+
+	aiter = records(inputa,rs)
+	biter = records(inputb,rs)
+
+	pair = nextpair(aiter, biter)
+	while pair:
+		yield pair
+		pair = nextpair(aiter, biter)
+
